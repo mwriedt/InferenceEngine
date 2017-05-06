@@ -1,5 +1,6 @@
 package com.company;
 import java.io.*;
+import java.util.Arrays;
 
 public class Main {
     //the number of methods programmed into InferenceEngine
@@ -15,9 +16,6 @@ public class Main {
 	    InitMethods();
 
 	    readProblemFile(args[0]);
-	    
-	    //choose method
-	    //solve
     }
 
     private static TruthTable readProblemFile(String fileName)
@@ -27,7 +25,7 @@ public class Main {
             //create file reading objects
             FileReader reader = new FileReader(fileName);
             BufferedReader problem = new BufferedReader(reader);
-            TruthTable result; //dummy class for timebeing
+            TruthTable result;
 
             //split by TELL
             problem.readLine(); //reads "TELL"
@@ -37,6 +35,9 @@ public class Main {
             //split by ASK
             problem.readLine(); //reads "ASK"
             String readAsk = problem.readLine(); //reads query and stores
+
+            System.out.println("Tell: " + readTell);
+            System.out.println("Ask: " + readAsk);
 
             //create the TT object...
             result = new TruthTable();
@@ -64,8 +65,13 @@ public class Main {
 
     private static void ParseStateString(String stateString)
     {
-        //split the string by spaces or => or ; or &
-        String[] symbols = stateString.split(" |=>|;|&");
+        //remove spaces
+        String noSpaces = stateString.replaceAll("\\s", "");
+
+        //split the string by => or ; or &
+        String[] symbols = noSpaces.split("(?<==>)|(?==>)|(?<=;)|(?=;)|(?<=&)|(?=&)");
+
+        System.out.println("parse: " + Arrays.toString(symbols));
 
         //put into table
 
