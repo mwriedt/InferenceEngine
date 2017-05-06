@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Mitchell on 6/05/2017.
@@ -27,17 +28,24 @@ public class Parser
             //split by TELL
             problem.readLine(); //reads "TELL"
             String readTell = problem.readLine(); //reads KB
-            String[] symbols = ParseStateString(readTell);
+            List<String> symbols;
+            symbols = ParseStateString(readTell);
+
             result.SetSymbols(symbols);
+
             //split by ASK
             problem.readLine(); //reads "ASK"
-            String readAsk = problem.readLine(); //reads query and stores
 
+
+            String readAsk = problem.readLine(); //reads query and stores // Might need to change to list
+
+
+            result.SetQuery(readAsk); //Set the query
             System.out.println("Tell: " + readTell);
             System.out.println("Ask: " + readAsk);
 
             //create the TT object...
-            result = new TruthTable();
+           // result = new TruthTable();
 
             problem.close();
             return result;
@@ -60,16 +68,17 @@ public class Parser
         return null;
     }
 
-    private static String[] ParseStateString(String stateString)
+    private static List<String> ParseStateString(String stateString)
     {
         //remove spaces
         String noSpaces = stateString.replaceAll("\\s", "");
 
         //split the string by => or ; or &
         String[] symbols = noSpaces.split("(?<==>)|(?==>)|(?<=;)|(?=;)|(?<=&)|(?=&)");
+        List<String> symbolList = Arrays.asList(symbols);
 
         System.out.println("parse: " + Arrays.toString(symbols));
-        return symbols;
+        return symbolList;
         //put into table
 
         //return something. change void
