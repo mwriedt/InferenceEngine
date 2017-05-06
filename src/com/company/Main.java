@@ -1,14 +1,20 @@
 package com.company;
+import javafx.scene.shape.TriangleMesh;
+
 import java.io.*;
 import java.util.Arrays;
 
-public class Main {
+public class Main
+{
     //the number of methods programmed into InferenceEngine
     public static final int METHOD_COUNT = 0;
+
+    public TruthTable truthTable = new TruthTable();
 
     private static void InitMethods()
     {
         //enter TT, BC, FC
+
     }
 
 

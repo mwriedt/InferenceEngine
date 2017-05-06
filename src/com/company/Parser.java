@@ -10,7 +10,10 @@ import java.util.Arrays;
  * Created by Mitchell on 6/05/2017.
  */
 
-public class Parser {
+public class Parser
+{
+
+
 
     public static TruthTable readProblemFile(String fileName)
     {
@@ -19,13 +22,13 @@ public class Parser {
             //create file reading objects
             FileReader reader = new FileReader(fileName);
             BufferedReader problem = new BufferedReader(reader);
-            TruthTable result;
+            TruthTable result = new TruthTable();
 
             //split by TELL
             problem.readLine(); //reads "TELL"
             String readTell = problem.readLine(); //reads KB
-            ParseStateString(readTell); // FIX: assign to object
-
+            String[] symbols = ParseStateString(readTell);
+            result.SetSymbols(symbols);
             //split by ASK
             problem.readLine(); //reads "ASK"
             String readAsk = problem.readLine(); //reads query and stores
@@ -57,7 +60,7 @@ public class Parser {
         return null;
     }
 
-    private static void ParseStateString(String stateString)
+    private static String[] ParseStateString(String stateString)
     {
         //remove spaces
         String noSpaces = stateString.replaceAll("\\s", "");
@@ -66,7 +69,7 @@ public class Parser {
         String[] symbols = noSpaces.split("(?<==>)|(?==>)|(?<=;)|(?=;)|(?<=&)|(?=&)");
 
         System.out.println("parse: " + Arrays.toString(symbols));
-
+        return symbols;
         //put into table
 
         //return something. change void
