@@ -13,4 +13,8 @@ public class Symbol {
         value = tempValue;
     }
 
+    public Boolean GetValue()
+    {
+        return value;
+    }
 }

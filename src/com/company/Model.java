@@ -22,5 +22,10 @@ public class Model {
         return this;
     }
 
+    public boolean get(int i)
+    {
+        return model.get(i).GetValue();
+    }
+
 
 }

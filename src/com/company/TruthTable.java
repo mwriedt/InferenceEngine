@@ -1,5 +1,7 @@
 package com.company;
 
+import com.sun.jmx.snmp.SnmpUnknownModelLcdException;
+
 import javax.jws.WebParam;
 import java.lang.*;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.List;
 public class TruthTable
 {
     private List<String> knowledgeBase = new ArrayList<String>();
-    private List<String> query;
+    private List<String> query = new ArrayList<String>();
 
     public TruthTable()
     {
@@ -38,6 +40,7 @@ public class TruthTable
         List<String> symbols;
         Model model = new Model();
         symbols = getSymbols(knowledgeBase, query);
+        List<List<String>> Sentences = GetSentences(knowledgeBase);
         return CheckAll(knowledgeBase, query,symbols, model);
     }
 
@@ -45,7 +48,8 @@ public class TruthTable
     {
         String P;
 
-        if (symbols.size() <= 0) {
+        if ((symbols.size() <= 0)) //if there are still symbols in the list
+        {
             if (PLTrue(KB, model))
             {
                 return PLTrue(query, model);
@@ -59,8 +63,8 @@ public class TruthTable
         {
             do
             {
-                P = symbols.get(0);
-                symbols.remove(0);
+                P = symbols.get(0);         //get the first symbol in the list
+                symbols.remove(0);    //and remove it from the list
 
                 return (CheckAll(KB,query,symbols, model.add(P,true)) && CheckAll(KB,query, symbols, model.add(P,false)));
             }while(true);
@@ -77,14 +81,21 @@ public class TruthTable
 
     private boolean PLTrue(List<String> listValue, Model model)
     {
-        if (listValue.size() >= 1)
-        {
-            System.out.println("KB");
-        }
-        else
-        {
-            System.out.println("Query");
-        }
+
+//        for (List<Symbol> Symbols: model)
+//        {
+//            for (List<String> sentence: Sentences)
+//            {
+//                // if sentence is false, return false?
+//            }
+//        }
+
+        //for each sentence in listValue
+        //  if sentence doesn't hold true to query
+        //      return false
+        //  end if
+        //end for
+
         return true;
     }
 
@@ -111,5 +122,37 @@ public class TruthTable
         }
         //String[] temp = result.toArray(new String[result.size()]);
         return result;
+    }
+
+    private List<List<String>> GetSentences(List<String> listValue)
+    {
+        List<List<String>> Sentences = new ArrayList<>();
+        List<String> sentence = new ArrayList<>();
+
+        for (String s : listValue)
+        {
+            if (s.equals(";"))
+            {
+
+                Sentences.add(sentence);
+                sentence = new ArrayList<>();
+            }
+            else
+            {
+                sentence.add(s);
+            }
+        }
+
+        System.out.println("");
+        System.out.println("TELL:");
+        for(List<String> s: Sentences)
+        {
+            for (String t: s)
+            {
+                System.out.print(t);
+            }
+            System.out.println();
+        }
+        return Sentences;
     }
 }
