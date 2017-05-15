@@ -22,7 +22,7 @@ public class Main
 	    InitMethods();
         Parser parseFile = new Parser(); //Create the parsing object
         truthTable = parseFile.readProblemFile("test.txt"); //Read the file TEMP
-        truthTable.Entails();
+        truthTable.Entails(); //Create the truth table, will be changed later when Forward and Backward chaining are implemented
 	    //readProblemFile(args[0]); //Just for debugging purposes
     }
 }

@@ -13,9 +13,6 @@ import java.util.List;
 
 public class Parser
 {
-
-
-
     public static TruthTable readProblemFile(String fileName)
     {
         try
@@ -31,7 +28,7 @@ public class Parser
             List<String> symbols;
             symbols = ParseStateString(readTell);
 
-            result.SetSymbols(symbols);
+            result.SetKnowledgeBase(symbols);
 
             //split by ASK
             problem.readLine(); //reads "ASK"

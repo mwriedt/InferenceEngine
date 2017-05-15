@@ -8,66 +8,65 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 /**
  * Created by Mitchell on 6/05/2017.
  */
 
 public class TruthTable
 {
-    private List<String> knowledgeBase = new ArrayList<String>();
-    private List<String> query = new ArrayList<String>();
+    private List<String> knowledgeBase = new ArrayList<String>(); //The KB of the problem
+    private List<String> query = new ArrayList<String>(); //The Query of the problem
 
     public TruthTable()
     {
 
     }
 
-    public void SetSymbols(List<String> tempSymbols)
+    public void SetKnowledgeBase(List<String> tempSymbols)
     {
         //knowledgeBase = tempSymbols;
-        knowledgeBase = new ArrayList<>(tempSymbols);
+        knowledgeBase = new ArrayList<>(tempSymbols); //Set the Knowledge Base from the Parsed in text file
     }
 
     public void SetQuery(String tempQ)
     {
-        query.add(tempQ);
+        query.add(tempQ); //Set the query from the text file
         //System.arraycopy(tempQ, 0, query, 0, tempQ.length()); //Get the symbols from the parser
     }
 
     public boolean Entails()
     {
-        List<String> symbols;
-        Model model = new Model();
-        symbols = getSymbols(knowledgeBase, query);
-        List<List<String>> Sentences = GetSentences(knowledgeBase);
-        return CheckAll(knowledgeBase, query,symbols, model);
+        List<String> symbols; //List of all symbols in the knowledge base and query, empty right now
+        Model model = new Model(); //The model, empty
+        symbols = getSymbols(knowledgeBase, query); //Set the symbols based on the Knowledgebase and query
+        List<List<String>> Sentences = GetSentences(knowledgeBase); //Set the sentences based on the knowledgebase
+        return CheckAll(knowledgeBase, query,symbols, model); //Return **
     }
 
     public boolean CheckAll(List<String> KB, List<String> query, List<String> symbols,Model model)
     {
         String P;
-
         if ((symbols.size() <= 0)) //if there are still symbols in the list
         {
-            if (PLTrue(KB, model))
+            if (PLTrue(KB, model)) //If the model satisfies the knowledgebase
             {
-                return PLTrue(query, model);
+                return PLTrue(query, model); //If the model satisfies the query
             }
             else
             {
                 return true;
             }
+
         }
         else
         {
             do
             {
                 P = symbols.get(0);         //get the first symbol in the list
-                List<String> Rest = new ArrayList<>(symbols);
-                Rest.remove(0);    //and remove it from the list
+                List<String> Rest = new ArrayList<>(symbols); //The rest of the symbols
+                Rest.remove(0);    //and remove it from the list, so that it is the same but one symbol has been removed
 
-                return (CheckAll(KB,query,Rest, model.add(P,true)) && CheckAll(KB,query,Rest, model.add(P,false)));
+                return (CheckAll(KB,query,Rest, model.add(P,true)) && CheckAll(KB,query,Rest, model.add(P,false))); //Recursively return CheckALL with the new model and symbols to create the truth table
             }while(true);
         }
         //if symbols is empty then
@@ -100,6 +99,8 @@ public class TruthTable
         return true;
     }
 
+
+    //Gets a list of the symbols from the Knowledgebase and the query, avoids duplicates/
     private List<String> getSymbols(List<String> KB, List<String> Q)
     {
         List<String> result = new ArrayList<>();
@@ -128,6 +129,8 @@ public class TruthTable
         return result;
     }
 
+
+    //Returns a list of the sentences in the knowledge base
     private List<List<String>> GetSentences(List<String> listValue)
     {
         List<List<String>> Sentences = new ArrayList<>();
