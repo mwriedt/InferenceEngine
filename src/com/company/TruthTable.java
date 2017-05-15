@@ -64,9 +64,10 @@ public class TruthTable
             do
             {
                 P = symbols.get(0);         //get the first symbol in the list
-                symbols.remove(0);    //and remove it from the list
+                List<String> Rest = new ArrayList<>(symbols);
+                Rest.remove(0);    //and remove it from the list
 
-                return (CheckAll(KB,query,symbols, model.add(P,true)) && CheckAll(KB,query, symbols, model.add(P,false)));
+                return (CheckAll(KB,query,Rest, model.add(P,true)) && CheckAll(KB,query,Rest, model.add(P,false)));
             }while(true);
         }
         //if symbols is empty then
@@ -117,7 +118,10 @@ public class TruthTable
         {
             if (!s.equals("=>")&& !s.equals("&") && !s.equals(";"))
             {
-                result.add(s);
+                if (!result.contains(s))
+                {
+                    result.add(s);
+                }
             }
         }
         //String[] temp = result.toArray(new String[result.size()]);
