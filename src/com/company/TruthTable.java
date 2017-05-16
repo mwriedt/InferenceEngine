@@ -56,7 +56,6 @@ public class TruthTable
             {
                 return true;
             }
-
         }
         else
         {
@@ -65,8 +64,8 @@ public class TruthTable
                 P = symbols.get(0);         //get the first symbol in the list
                 List<String> Rest = new ArrayList<>(symbols); //The rest of the symbols
                 Rest.remove(0);    //and remove it from the list, so that it is the same but one symbol has been removed
-
-                return (CheckAll(KB,query,Rest, model.add(P,true)) && CheckAll(KB,query,Rest, model.add(P,false))); //Recursively return CheckALL with the new model and symbols to create the truth table
+                Model tempModel = model.Copy();
+                return (CheckAll(KB, query, Rest, model.add(P,true)) && CheckAll(KB, query, Rest, tempModel.add(P,false))); //Recursively return CheckALL with the new model and symbols to create the truth table
             }while(true);
         }
         //if symbols is empty then
@@ -96,7 +95,7 @@ public class TruthTable
         //  end if
         //end for
 
-        return true;
+        return false;
     }
 
 
