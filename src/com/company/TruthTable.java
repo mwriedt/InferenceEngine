@@ -12,26 +12,15 @@ import java.util.List;
  * Created by Mitchell on 6/05/2017.
  */
 
-public class TruthTable
+public class TruthTable extends SearchMethod
 {
-    private List<String> knowledgeBase = new ArrayList<String>(); //The KB of the problem
-    private List<String> query = new ArrayList<String>(); //The Query of the problem
 
     public TruthTable()
     {
-
-    }
-
-    public void SetKnowledgeBase(List<String> tempSymbols)
-    {
-        //knowledgeBase = tempSymbols;
-        knowledgeBase = new ArrayList<>(tempSymbols); //Set the Knowledge Base from the Parsed in text file
-    }
-
-    public void SetQuery(String tempQ)
-    {
-        query.add(tempQ); //Set the query from the text file
-        //System.arraycopy(tempQ, 0, query, 0, tempQ.length()); //Get the symbols from the parser
+        code = "TT";
+        longName = "Truth Table";
+        knowledgeBase = new ArrayList<String>(); //The KB of the problem
+        query = new ArrayList<String>(); //The Query of the problem
     }
 
     public boolean Entails()
@@ -96,6 +85,8 @@ public class TruthTable
         //end for
 
         return false;
+<<<<<<< HEAD
+=======
     }
 
 
@@ -126,6 +117,7 @@ public class TruthTable
         }
         //String[] temp = result.toArray(new String[result.size()]);
         return result;
+>>>>>>> master
     }
 
 
