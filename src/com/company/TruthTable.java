@@ -85,6 +85,39 @@ public class TruthTable extends SearchMethod
         //end for
 
         return false;
+<<<<<<< HEAD
+=======
+    }
+
+
+    //Gets a list of the symbols from the Knowledgebase and the query, avoids duplicates/
+    private List<String> getSymbols(List<String> KB, List<String> Q)
+    {
+        List<String> result = new ArrayList<>();
+
+        for (String s: KB)
+        {
+            if (!s.equals("=>")&& !s.equals("&") && !s.equals(";"))
+            {
+                if (!result.contains(s))
+                {
+                    result.add(s);
+                }
+            }
+        }
+        for (String s: Q)
+        {
+            if (!s.equals("=>")&& !s.equals("&") && !s.equals(";"))
+            {
+                if (!result.contains(s))
+                {
+                    result.add(s);
+                }
+            }
+        }
+        //String[] temp = result.toArray(new String[result.size()]);
+        return result;
+>>>>>>> master
     }
 
 
