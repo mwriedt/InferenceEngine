@@ -12,26 +12,15 @@ import java.util.List;
  * Created by Mitchell on 6/05/2017.
  */
 
-public class TruthTable
+public class TruthTable extends SearchMethod
 {
-    private List<String> knowledgeBase = new ArrayList<String>(); //The KB of the problem
-    private List<String> query = new ArrayList<String>(); //The Query of the problem
 
     public TruthTable()
     {
-
-    }
-
-    public void SetKnowledgeBase(List<String> tempSymbols)
-    {
-        //knowledgeBase = tempSymbols;
-        knowledgeBase = new ArrayList<>(tempSymbols); //Set the Knowledge Base from the Parsed in text file
-    }
-
-    public void SetQuery(String tempQ)
-    {
-        query.add(tempQ); //Set the query from the text file
-        //System.arraycopy(tempQ, 0, query, 0, tempQ.length()); //Get the symbols from the parser
+        code = "TT";
+        longName = "Truth Table";
+        knowledgeBase = new ArrayList<String>(); //The KB of the problem
+        query = new ArrayList<String>(); //The Query of the problem
     }
 
     public boolean Entails()
@@ -56,7 +45,6 @@ public class TruthTable
             {
                 return true;
             }
-
         }
         else
         {
@@ -65,8 +53,8 @@ public class TruthTable
                 P = symbols.get(0);         //get the first symbol in the list
                 List<String> Rest = new ArrayList<>(symbols); //The rest of the symbols
                 Rest.remove(0);    //and remove it from the list, so that it is the same but one symbol has been removed
-
-                return (CheckAll(KB,query,Rest, model.add(P,true)) && CheckAll(KB,query,Rest, model.add(P,false))); //Recursively return CheckALL with the new model and symbols to create the truth table
+                Model tempModel = model.Copy();
+                return (CheckAll(KB, query, Rest, model.add(P,true)) && CheckAll(KB, query, Rest, tempModel.add(P,false))); //Recursively return CheckALL with the new model and symbols to create the truth table
             }while(true);
         }
         //if symbols is empty then
@@ -96,37 +84,7 @@ public class TruthTable
         //  end if
         //end for
 
-        return true;
-    }
-
-
-    //Gets a list of the symbols from the Knowledgebase and the query, avoids duplicates/
-    private List<String> getSymbols(List<String> KB, List<String> Q)
-    {
-        List<String> result = new ArrayList<>();
-
-        for (String s: KB)
-        {
-            if (!s.equals("=>")&& !s.equals("&") && !s.equals(";"))
-            {
-                if (!result.contains(s))
-                {
-                    result.add(s);
-                }
-            }
-        }
-        for (String s: Q)
-        {
-            if (!s.equals("=>")&& !s.equals("&") && !s.equals(";"))
-            {
-                if (!result.contains(s))
-                {
-                    result.add(s);
-                }
-            }
-        }
-        //String[] temp = result.toArray(new String[result.size()]);
-        return result;
+        return false;
     }
 
 

@@ -13,7 +13,12 @@ public class Symbol {
         value = tempValue;
     }
 
-    public Boolean GetValue()
+    public String getId()
+    {
+        return id;
+    }
+
+    public Boolean getValue()
     {
         return value;
     }

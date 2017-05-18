@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,14 +14,14 @@ import java.util.List;
 
 public class Parser
 {
-    public static TruthTable readProblemFile(String fileName)
+    public static ProblemSet readProblemFile(String fileName)
     {
         try
         {
             //create file reading objects
             FileReader reader = new FileReader(fileName);
             BufferedReader problem = new BufferedReader(reader);
-            TruthTable result = new TruthTable();
+            ProblemSet result;
 
             //split by TELL
             problem.readLine(); //reads "TELL"
@@ -28,16 +29,13 @@ public class Parser
             List<String> symbols;
             symbols = ParseStateString(readTell);
 
-            result.SetKnowledgeBase(symbols);
-
             //split by ASK
             problem.readLine(); //reads "ASK"
-
 
             String readAsk = problem.readLine(); //reads query and stores // Might need to change to list
 
 
-            result.SetQuery(readAsk); //Set the query
+            result = new ProblemSet(symbols, readAsk);
             System.out.println("Tell: " + readTell);
             System.out.println("Ask: " + readAsk);
 
@@ -80,4 +78,6 @@ public class Parser
 
         //return something. change void
     }
+
+
 }
