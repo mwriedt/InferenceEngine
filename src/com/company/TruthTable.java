@@ -47,8 +47,6 @@ public class TruthTable extends SearchMethod
         {
             if (PLTrue(Sentences, model)) //If the model satisfies the knowledgebase
             {
-                count++; //TEMP
-                System.out.println(count); //TEMP
                 if (PLTrue(model, query))
                 {
                     count++; //TEMP
@@ -130,8 +128,8 @@ public class TruthTable extends SearchMethod
                         leftToRight = true; //Left side has been completed, move to right side now
                     }
                 }
-                //System.out.println(left.getArguments());
-                //System.out.println(right.getArguments());
+                //System.out.println("left: " + left.getArguments());
+                //System.out.println("right: " + right.getArguments());
                 left.setValue(EvaluateSide(left, model));//Does the model hold true in this sentence?
                 right.setValue(EvaluateSide(right, model)); //Does the model hold true in this sentence?
                 if (left.getValue() && !right.getValue()) //If the left side is true and the right side is false then the model does not satisfy the knowledge base
@@ -145,6 +143,7 @@ public class TruthTable extends SearchMethod
                 {
                     left.addArgument(x); //Add this string
                 }
+               // System.out.println("Single: " + left.getArguments());
                 left.setValue(EvaluateSide(left, model)); //Evaluate the model to the sentence
                 if (!left.getValue())
                 {
@@ -186,7 +185,7 @@ public class TruthTable extends SearchMethod
         boolean leftBool = false;
         for(Symbol s: tempModel.GetModel()) //For each symbol in the model
         {
-            if (left == s.getId()) //If the string in the side is the one in the model, get that symbols value
+            if (left.equals(s.getId())) //If the string in the side is the one in the model, get that symbols value
             {
                 leftBool = s.getValue();
             }
@@ -200,11 +199,11 @@ public class TruthTable extends SearchMethod
         boolean rightBool = false; //Init to false
         for(Symbol s: tempModel.GetModel()) //For every symbol in the model
         {
-            if (left == s.getId()) //If we find the symbol id of the side
+            if (left.equals(s.getId())) //If we find the symbol id of the side
             {
                 leftBool = s.getValue(); //Get that symbols value
             }
-            if (right == s.getId())
+            if (right.equals(s.getId()))
             {
                 rightBool = s.getValue();
             }
