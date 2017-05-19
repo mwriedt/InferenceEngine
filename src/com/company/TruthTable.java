@@ -172,9 +172,16 @@ public class TruthTable extends SearchMethod
         {
             for (int i = 0; i < tempSide.getArguments().size(); i++) //For each string in the side
             {
-                if (tempSide.getArguments().get(i).equals("&")) //If the symbol is an "&"
+                if (tempSide.getArguments().get(i).equals("&")) //If the symbol is a "&"
                 {
                     if (!And(tempSide.getArguments().get(i-1), tempSide.getArguments().get(i+1), tempModel)) //Then the left and right of that symbol need to be evaluated, return if false
+                    {
+                        return false;
+                    }
+                }
+                else if(tempSide.getArguments().get(i).equals("|")) //If the symbol is a "|"
+                {
+                    if (!Or(tempSide.getArguments().get(i-1), tempSide.getArguments().get(i+1), tempModel))
                     {
                         return false;
                     }
@@ -196,6 +203,24 @@ public class TruthTable extends SearchMethod
             }
         }
         return leftBool;
+    }
+
+    private boolean Or(String left,String right, Model tempModel) //If you are "Or"ing values
+    {
+        boolean leftBool = false; //Init to false
+        boolean rightBool = false; //Init to false
+        for(Symbol s: tempModel.GetModel()) //For every symbol in the model
+        {
+            if (left.equals(s.getId())) //If we find the symbol id of the side
+            {
+                leftBool = s.getValue(); //Get that symbols value
+            }
+            if (right.equals(s.getId()))
+            {
+                rightBool = s.getValue();
+            }
+        }
+        return (leftBool || rightBool); //Return if either are true
     }
 
     private boolean And(String left, String right, Model tempModel) //If you are adding values together
