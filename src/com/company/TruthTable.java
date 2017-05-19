@@ -47,12 +47,12 @@ public class TruthTable extends SearchMethod
         {
             if (PLTrue(Sentences, model)) //If the model satisfies the knowledgebase
             {
-                count++;
-                System.out.println(count);
+                count++; //TEMP
+                System.out.println(count); //TEMP
                 if (PLTrue(model, query))
                 {
-                    count++;
-                    System.out.println(count);
+                    count++; //TEMP
+                    System.out.println(count);//TEMP
                 }
                 return PLTrue(model, query); //If the model satisfies the query
             }
@@ -82,71 +82,74 @@ public class TruthTable extends SearchMethod
         //return true;
     }
 
-    private boolean PLTrue(Model model, List<String> query)
+    private boolean PLTrue(Model model, List<String> query) //Evaluate the model against the query
     {
-        Equation left = new Equation();
+        Equation left = new Equation(); //If there is only a query, we only need one side
         left.Clear();
-        for (String x:query)
+        for (String x:query)//For all strings in the query
         {
-            if (x != "=>")
-            {
-                left.addArgument(x);
-            }
+            //if (x != "=>")
+            //{
+                left.addArgument(x); //Add the arguments to the side
+            //}
         }
-        left.setValue(EvaluateSide(left, model));
+        left.setValue(EvaluateSide(left, model)); //Set the value based on the model
 
-        return left.getValue();
+        return left.getValue(); //Return this value
     }
 
-    private boolean PLTrue(List<List<String> > sentences, Model model)
+    private boolean PLTrue(List<List<String> > sentences, Model model)//Evaluate the model against the knowledge base
     {
-        Equation left = new Equation();
+        Equation left = new Equation(); //Left side of the "=>"
         boolean leftToRight;
-        Equation right = new Equation();
-        for (List<String> s:sentences)
+        Equation right = new Equation(); //Right side of the "=>"
+        for (List<String> s:sentences) //For each sentence
         {
-            right.Clear();
-            left.Clear();
-            leftToRight = false;
-            if (s.contains("=>"))
+            right.Clear(); //Clear all previous sentence values
+            left.Clear(); //Clear all previous sentence values
+            leftToRight = false; //Left has not been completed yet
+            if (s.contains("=>")) //If the sentence contains a "=>" then it is more than 1 string
             {
-                for (String x:s)
+                for (String x:s) //For each string in a sentence
                 {
-                    if (!x.equals("=>"))
+                    if (!x.equals("=>")) //If the string is not "=>" then it is a symbol
                     {
-                        if (leftToRight)
+                        if (leftToRight) //Has the left side been completed?
                         {
                             //Right Side of equation
-                            right.addArgument(x);
+                            right.addArgument(x); //Add symbols to the right side
                         }
                         else
                         {
                             //Left Side of equation
-                            left.addArgument(x);
+                            left.addArgument(x); //Add symbols to the left side of teh equation
                         }
                     }
                     else
                     {
-                        leftToRight = true;
+                        leftToRight = true; //Left side has been completed, move to right side now
                     }
                 }
                 //System.out.println(left.getArguments());
                 //System.out.println(right.getArguments());
-                left.setValue(EvaluateSide(left, model));
-                right.setValue(EvaluateSide(right, model));
-                if (left.getValue() && !right.getValue())
+                left.setValue(EvaluateSide(left, model));//Does the model hold true in this sentence?
+                right.setValue(EvaluateSide(right, model)); //Does the model hold true in this sentence?
+                if (left.getValue() && !right.getValue()) //If the left side is true and the right side is false then the model does not satisfy the knowledge base
                 {
                     return false;
                 }
             }
-            else
+            else //If the sentence in only one string
             {
                 for (String x:s)
                 {
-                    left.addArgument(x);
+                    left.addArgument(x); //Add this string
                 }
-                left.setValue(EvaluateSide(left, model));
-              //  return left.getValue();
+                left.setValue(EvaluateSide(left, model)); //Evaluate the model to the sentence
+                if (!left.getValue())
+                {
+                    return false; //If it does not satisfy the kb, return false
+                }
             }
 
         }
@@ -155,21 +158,19 @@ public class TruthTable extends SearchMethod
     }
 
 
-    private boolean EvaluateSide(Equation tempSide, Model tempModel)
+    private boolean EvaluateSide(Equation tempSide, Model tempModel) //Evaluate the side against the model
     {
-        if (tempSide.getArguments().size() == 1)
+        if (tempSide.getArguments().size() == 1) //If the side is one string
         {
-             return Single(tempSide.getArguments().get(0), tempModel);
+             return Single(tempSide.getArguments().get(0), tempModel); //Return based on value
         }
         else
         {
-            for (int i = 0; i < tempSide.getArguments().size(); i++)
+            for (int i = 0; i < tempSide.getArguments().size(); i++) //For each string in the side
             {
-                //System.out.println(tempSide.getArguments().size());
-                //System.out.println(tempSide.getArguments());
-                if (tempSide.getArguments().get(i) == "&")
+                if (tempSide.getArguments().get(i) == "&") //If the symbol is an "&"
                 {
-                    if (!And(tempSide.getArguments().get(i-1), tempSide.getArguments().get(i+1), tempModel))
+                    if (!And(tempSide.getArguments().get(i-1), tempSide.getArguments().get(i+1), tempModel)) //Then the left and right of that symbol need to be evaluated, return if false
                     {
                         return false;
                     }
@@ -180,12 +181,12 @@ public class TruthTable extends SearchMethod
 
     }
 
-    private boolean Single(String left, Model tempModel)
+    private boolean Single(String left, Model tempModel)//If there is only one string in the sentence
     {
         boolean leftBool = false;
-        for(Symbol s: tempModel.GetModel())
+        for(Symbol s: tempModel.GetModel()) //For each symbol in the model
         {
-            if (left == s.getId())
+            if (left == s.getId()) //If the string in the side is the one in the model, get that symbols value
             {
                 leftBool = s.getValue();
             }
@@ -193,23 +194,24 @@ public class TruthTable extends SearchMethod
         return leftBool;
     }
 
-    private boolean And(String left, String right, Model tempModel)
+    private boolean And(String left, String right, Model tempModel) //If you are adding values together
     {
-        boolean leftBool = false;
-        boolean rightBool = false;
-        for(Symbol s: tempModel.GetModel())
+        boolean leftBool = false; //Init to false
+        boolean rightBool = false; //Init to false
+        for(Symbol s: tempModel.GetModel()) //For every symbol in the model
         {
-            if (left == s.getId())
+            if (left == s.getId()) //If we find the symbol id of the side
             {
-                leftBool = s.getValue();
+                leftBool = s.getValue(); //Get that symbols value
             }
             if (right == s.getId())
             {
                 rightBool = s.getValue();
             }
         }
-        return (leftBool && rightBool);
+        return (leftBool && rightBool); //Return if they are both true
     }
+
     //Gets a list of the symbols from the Knowledgebase and the query, avoids duplicates/
     public List<String> getSymbols(List<String> KB, List<String> Q)
     {
