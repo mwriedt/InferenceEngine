@@ -15,6 +15,8 @@ import java.util.List;
 public class TruthTable extends SearchMethod
 {
 
+    private int count = 0;
+
     public TruthTable()
     {
         code = "TT";
@@ -23,23 +25,36 @@ public class TruthTable extends SearchMethod
         query = new ArrayList<String>(); //The Query of the problem
     }
 
+    public void SetValues(ProblemSet tempProblemSet)
+    {
+        knowledgeBase = new ArrayList<>(tempProblemSet.KnowledgeBase);
+        query = new ArrayList<>(tempProblemSet.Query);
+    }
+
     public boolean Entails()
     {
         List<String> symbols; //List of all symbols in the knowledge base and query, empty right now
         Model model = new Model(); //The model, empty
         symbols = getSymbols(knowledgeBase, query); //Set the symbols based on the Knowledgebase and query
         List<List<String>> Sentences = GetSentences(knowledgeBase); //Set the sentences based on the knowledgebase
-        return CheckAll(knowledgeBase, query,symbols, model); //Return **
+        return CheckAll(Sentences, query,symbols, model); //Return **
     }
 
-    public boolean CheckAll(List<String> KB, List<String> query, List<String> symbols,Model model)
+    public boolean CheckAll(List<List<String>> Sentences, List<String> query, List<String> symbols,Model model)
     {
         String P;
         if ((symbols.size() <= 0)) //if there are still symbols in the list
         {
-            if (PLTrue(KB, model)) //If the model satisfies the knowledgebase
+            if (PLTrue(Sentences, model)) //If the model satisfies the knowledgebase
             {
-                return PLTrue(query, model); //If the model satisfies the query
+                count++;
+                System.out.println(count);
+                if (PLTrue(model, query))
+                {
+                    count++;
+                    System.out.println(count);
+                }
+                return PLTrue(model, query); //If the model satisfies the query
             }
             else
             {
@@ -54,7 +69,7 @@ public class TruthTable extends SearchMethod
                 List<String> Rest = new ArrayList<>(symbols); //The rest of the symbols
                 Rest.remove(0);    //and remove it from the list, so that it is the same but one symbol has been removed
                 Model tempModel = model.Copy();
-                return (CheckAll(KB, query, Rest, model.add(P,true)) && CheckAll(KB, query, Rest, tempModel.add(P,false))); //Recursively return CheckALL with the new model and symbols to create the truth table
+                return (CheckAll(Sentences, query, Rest, model.add(P,true)) && CheckAll(Sentences, query, Rest, tempModel.add(P,false))); //Recursively return CheckALL with the new model and symbols to create the truth table
             }while(true);
         }
         //if symbols is empty then
@@ -67,27 +82,134 @@ public class TruthTable extends SearchMethod
         //return true;
     }
 
-    private boolean PLTrue(List<String> listValue, Model model)
+    private boolean PLTrue(Model model, List<String> query)
     {
+        Equation left = new Equation();
+        left.Clear();
+        for (String x:query)
+        {
+            if (x != "=>")
+            {
+                left.addArgument(x);
+            }
+        }
+        left.setValue(EvaluateSide(left, model));
 
-//        for (List<Symbol> Symbols: model)
-//        {
-//            for (List<String> sentence: Sentences)
-//            {
-//                // if sentence is false, return false?
-//            }
-//        }
+        return left.getValue();
+    }
 
-        //for each sentence in listValue
-        //  if sentence doesn't hold true to query
-        //      return false
-        //  end if
-        //end for
+    private boolean PLTrue(List<List<String> > sentences, Model model)
+    {
+        Equation left = new Equation();
+        boolean leftToRight;
+        Equation right = new Equation();
+        for (List<String> s:sentences)
+        {
+            right.Clear();
+            left.Clear();
+            leftToRight = false;
+            if (s.contains("=>"))
+            {
+                for (String x:s)
+                {
+                    if (!x.equals("=>"))
+                    {
+                        if (leftToRight)
+                        {
+                            //Right Side of equation
+                            right.addArgument(x);
+                        }
+                        else
+                        {
+                            //Left Side of equation
+                            left.addArgument(x);
+                        }
+                    }
+                    else
+                    {
+                        leftToRight = true;
+                    }
+                }
+                //System.out.println(left.getArguments());
+                //System.out.println(right.getArguments());
+                left.setValue(EvaluateSide(left, model));
+                right.setValue(EvaluateSide(right, model));
+                if (left.getValue() && !right.getValue())
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                for (String x:s)
+                {
+                    left.addArgument(x);
+                }
+                left.setValue(EvaluateSide(left, model));
+              //  return left.getValue();
+            }
 
-        return false;
+        }
+        //Only need to find if left is true and right is false, if that return false, else return true
+        return true;
     }
 
 
+    private boolean EvaluateSide(Equation tempSide, Model tempModel)
+    {
+        if (tempSide.getArguments().size() == 1)
+        {
+             return Single(tempSide.getArguments().get(0), tempModel);
+        }
+        else
+        {
+            for (int i = 0; i < tempSide.getArguments().size(); i++)
+            {
+                //System.out.println(tempSide.getArguments().size());
+                //System.out.println(tempSide.getArguments());
+                if (tempSide.getArguments().get(i) == "&")
+                {
+                    if (!And(tempSide.getArguments().get(i-1), tempSide.getArguments().get(i+1), tempModel))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+    }
+
+    private boolean Single(String left, Model tempModel)
+    {
+        boolean leftBool = false;
+        for(Symbol s: tempModel.GetModel())
+        {
+            if (left == s.getId())
+            {
+                leftBool = s.getValue();
+            }
+        }
+        return leftBool;
+    }
+
+    private boolean And(String left, String right, Model tempModel)
+    {
+        boolean leftBool = false;
+        boolean rightBool = false;
+        for(Symbol s: tempModel.GetModel())
+        {
+            if (left == s.getId())
+            {
+                leftBool = s.getValue();
+            }
+            if (right == s.getId())
+            {
+                rightBool = s.getValue();
+            }
+        }
+        return (leftBool && rightBool);
+    }
     //Gets a list of the symbols from the Knowledgebase and the query, avoids duplicates/
     public List<String> getSymbols(List<String> KB, List<String> Q)
     {
@@ -119,12 +241,12 @@ public class TruthTable extends SearchMethod
 
 
     //Returns a list of the sentences in the knowledge base
-    private List<List<String>> GetSentences(List<String> listValue)
+    private List<List<String>> GetSentences(List<String> knowledgeBase)
     {
         List<List<String>> Sentences = new ArrayList<>();
         List<String> sentence = new ArrayList<>();
 
-        for (String s : listValue)
+        for (String s : knowledgeBase)
         {
             if (s.equals(";"))
             {

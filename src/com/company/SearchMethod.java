@@ -14,6 +14,15 @@ public abstract class SearchMethod
     public List<String> knowledgeBase;
     public List<String> query;
 
+    public SearchMethod()
+    {
+    }
+
+    public void SetValues(ProblemSet tempProblemSet)
+    {
+
+    }
+
     public abstract boolean Entails();
 
     //Gets a list of the symbols from the Knowledgebase and the query, avoids duplicates/

@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class Main
 {
     //the number of methods programmed into InferenceEngine
-    public static final int METHOD_COUNT = 2;
+    public static final int METHOD_COUNT = 3;
     public static ProblemSet problemSet;
     public static SearchMethod[] lMethods;
 
@@ -16,7 +16,7 @@ public class Main
         lMethods = new SearchMethod[METHOD_COUNT];
         lMethods[0] = new TruthTable();
         lMethods[1] = new BackwardChaining();
-//        lMethods[2] = new ForwardChaining();
+        lMethods[2] = new ForwardChaining();
 
     }
 
@@ -31,16 +31,16 @@ public class Main
         //  [2] - method name
 
 
-        if(args.length < 3)
+        if(args.length < 2)
         {
             System.out.println("Usage: Main <filename> <search-method>.");
             System.exit(1);
         }
 
         //get the method from the file
-        problemSet = parseFile.readProblemFile(args[1]); //Read the file TEMP
+        ProblemSet tempProblemSet = parseFile.readProblemFile(args[1]); //Read the file TEMP
 
-        String method = args[2];
+        String method = args[0];
         SearchMethod thisMethod = null;
 
         //determine which method to use
@@ -60,6 +60,11 @@ public class Main
             System.out.println("Method identified by " + method + " does not exist. Method codes are Case Sensitive!");
             System.exit(1);
         }
+        else
+        {
+            thisMethod.SetValues(tempProblemSet);
+        }
+
 
         boolean solution = thisMethod.Entails();
         System.out.println(solution);

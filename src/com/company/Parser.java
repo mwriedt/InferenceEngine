@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,8 +35,10 @@ public class Parser
 
             String readAsk = problem.readLine(); //reads query and stores // Might need to change to list
 
+            List<String> query= new ArrayList<>();
+            query.add(readAsk);
 
-            result = new ProblemSet(symbols, readAsk);
+            result = new ProblemSet(symbols, query);
             System.out.println("Tell: " + readTell);
             System.out.println("Ask: " + readAsk);
 

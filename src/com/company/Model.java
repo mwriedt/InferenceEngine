@@ -27,6 +27,11 @@ public class Model
         return this;
     }
 
+    public List<Symbol> GetModel()
+    {
+        return model;
+    }
+
     public Model Copy()
     {
         Model temp = new Model();

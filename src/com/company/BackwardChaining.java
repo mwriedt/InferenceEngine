@@ -7,8 +7,6 @@ import java.util.List;
 public class BackwardChaining extends SearchMethod
 {
 
-
-
     public BackwardChaining()
     {
         code = "BC";
@@ -17,6 +15,10 @@ public class BackwardChaining extends SearchMethod
         query = new ArrayList<String>();
     }
 
+    public void SetValues(ProblemSet tempProblemSet)
+    {
+
+    }
 
     public boolean Entails()
     {

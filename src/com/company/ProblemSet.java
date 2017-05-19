@@ -11,9 +11,9 @@ import java.util.List;
 public class ProblemSet
 {
     public List<String> KnowledgeBase;
-    public String Query;
+    public List<String> Query;
 
-    public ProblemSet(List<String> KB, String Q)
+    public ProblemSet(List<String> KB, List<String> Q)
     {
         KnowledgeBase = KB;
         Query = Q;
