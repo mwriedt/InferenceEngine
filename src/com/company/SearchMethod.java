@@ -13,6 +13,8 @@ public abstract class SearchMethod
     public String longName;
     public List<String> knowledgeBase;
     public List<String> query;
+    private int count;
+
 
     public SearchMethod()
     {
@@ -23,6 +25,10 @@ public abstract class SearchMethod
 
     }
 
+    public int getCount()
+    {
+        return count;
+    }
     public abstract boolean Entails();
 
     //Gets a list of the symbols from the Knowledgebase and the query, avoids duplicates/

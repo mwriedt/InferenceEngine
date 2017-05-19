@@ -50,7 +50,7 @@ public class TruthTable extends SearchMethod
                 if (PLTrue(model, query))
                 {
                     count++; //TEMP
-                    System.out.println(count);//TEMP
+                   // System.out.println(count);//TEMP
                 }
                 return PLTrue(model, query); //If the model satisfies the query
             }
@@ -78,6 +78,11 @@ public class TruthTable extends SearchMethod
         // rest = Rest(Symbols)
         // return (CheckAll(Kb, q, model or {P = true}) and CheckAll(Kb, q, model or {P = false} )
         //return true;
+    }
+
+    public int getCount()
+    {
+        return count;
     }
 
     private boolean PLTrue(Model model, List<String> query) //Evaluate the model against the query
@@ -167,7 +172,7 @@ public class TruthTable extends SearchMethod
         {
             for (int i = 0; i < tempSide.getArguments().size(); i++) //For each string in the side
             {
-                if (tempSide.getArguments().get(i) == "&") //If the symbol is an "&"
+                if (tempSide.getArguments().get(i).equals("&")) //If the symbol is an "&"
                 {
                     if (!And(tempSide.getArguments().get(i-1), tempSide.getArguments().get(i+1), tempModel)) //Then the left and right of that symbol need to be evaluated, return if false
                     {
@@ -261,16 +266,16 @@ public class TruthTable extends SearchMethod
             }
         }
 
-        System.out.println("");
-        System.out.println("TELL:");
-        for(List<String> s: Sentences)
-        {
-            for (String t: s)
-            {
-                System.out.print(t);
-            }
-            System.out.println();
-        }
+//        System.out.println("");
+//        System.out.println("TELL:");
+//        for(List<String> s: Sentences)
+//        {
+//            for (String t: s)
+//            {
+//                System.out.print(t);
+//            }
+//            System.out.println();
+//        }
         return Sentences;
     }
 }

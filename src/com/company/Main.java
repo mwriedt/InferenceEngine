@@ -67,7 +67,22 @@ public class Main
 
 
         boolean solution = thisMethod.Entails();
-        System.out.println(solution);
+        switch (thisMethod.code)
+        {
+            case "TT":
+                if (solution)
+                {
+                    System.out.println("YES: " + thisMethod.getCount());
+                }
+                else
+                {
+                    System.out.println("NO");
+                }
+
+            case "FC":
+            case "BC":
+        }
+       // System.out.println(solution);
 
         System.exit(0);
     }
