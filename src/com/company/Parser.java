@@ -43,6 +43,8 @@ public class Parser
             problem.close();
             return result;
         }
+        
+        // ERROR HANDLING ACKNOWLEDGEMENT: Assignment 1 sourced from nPuzzler.java readProblemFile() written by COS30019
         catch(FileNotFoundException ex)
         {
             //The file didn't exist, show an error
