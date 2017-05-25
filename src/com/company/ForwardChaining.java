@@ -105,9 +105,12 @@ public class ForwardChaining extends SearchMethod
     }
 
     private void printTrue() {
-        for(String s: areTrue)              // for each string in areTrue
+        for(int i = 0; i < areTrue.size(); i++)              // for all strings in areTrue
         {
-            System.out.print(s + " ");      // print each one separated by space
+            if(i < areTrue.size()-1)                       // if not the last string in areTrue
+            System.out.print(areTrue.get(i) + ", ");      // print each one separated by comma and space
+            else
+                System.out.print(areTrue.get(i));           // print last string in areTrue without comma or space
         }
     }
 
