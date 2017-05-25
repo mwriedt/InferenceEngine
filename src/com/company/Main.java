@@ -38,7 +38,7 @@ public class Main
         }
 
         //get the method from the file
-        ProblemSet tempProblemSet = parseFile.readProblemFile(args[1]); //Read the file TEMP
+        problemSet = parseFile.readProblemFile(args[1]); //Read the file TEMP
 
         String method = args[0];
         SearchMethod thisMethod = null;
@@ -62,28 +62,23 @@ public class Main
         }
         else
         {
-            thisMethod.SetValues(tempProblemSet);
+            thisMethod.SetValues(problemSet);
         }
 
 
-        boolean solution = thisMethod.Entails();
-        switch (thisMethod.code)
+        boolean solution = thisMethod.Entails(); //Run method (BC/FC/TT)
+
+        if (thisMethod.code.equals("TT")) //If the mode selected was a Truth Table, print out the results
         {
-            case "TT":
-                if (solution)
-                {
-                    System.out.println("YES: " + thisMethod.getCount());
-                }
-                else
-                {
-                    System.out.println("NO");
-                }
-
-            case "FC":
-            case "BC":
+            if (solution)
+            {
+                System.out.println("YES: " + thisMethod.getCount());
+            }
+            else
+            {
+                System.out.println("NO");
+            }
         }
-       // System.out.println(solution);
-
         System.exit(0);
     }
 }

@@ -1,8 +1,5 @@
 package com.company;
 
-import com.sun.tracing.Probe;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,10 +10,10 @@ public class ProblemSet
     public List<String> KnowledgeBase;
     public List<String> Query;
 
-    public ProblemSet(List<String> KB, List<String> Q)
+    public ProblemSet(List<String> KB, List<String> Q) //A problem set is the main data given to the program from the text file
     {
-        KnowledgeBase = KB;
-        Query = Q;
+        KnowledgeBase = KB; //This is the Knowledge base given to the program
+        Query = Q; //This is the query asked by the text file
     }
 
 }

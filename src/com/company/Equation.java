@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Mitchell on 19/05/2017.
@@ -12,7 +11,7 @@ public class Equation
     private boolean value; //True/False of the equation
     private ArrayList<String> arguments = new ArrayList<>(); //Arguments inside the equation
 
-    public Equation()
+    public Equation() //An equation is used to evaluate the value of a side of an equation
     {
         value = false; //init to false
     }

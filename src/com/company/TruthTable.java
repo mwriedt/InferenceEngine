@@ -1,8 +1,5 @@
 package com.company;
 
-import com.sun.jmx.snmp.SnmpUnknownModelLcdException;
-
-import javax.jws.WebParam;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,18 +11,17 @@ import java.util.List;
 
 public class TruthTable extends SearchMethod
 {
+    private int count = 0; //A variable used to count how many models satisfy the knowledge base and query
 
-    private int count = 0;
-
-    public TruthTable()
+    public TruthTable() //Initialise these values to
     {
         code = "TT";
         longName = "Truth Table";
-        knowledgeBase = new ArrayList<String>(); //The KB of the problem
-        query = new ArrayList<String>(); //The Query of the problem
+        knowledgeBase = new ArrayList<>(); //The KB of the problem
+        query = new ArrayList<>(); //The Query of the problem
     }
 
-    public void SetValues(ProblemSet tempProblemSet)
+    public void SetValues(ProblemSet tempProblemSet) //Set the values of the knowledge base and the query within the Truth Table object
     {
         knowledgeBase = new ArrayList<>(tempProblemSet.KnowledgeBase);
         query = new ArrayList<>(tempProblemSet.Query);
@@ -40,64 +36,48 @@ public class TruthTable extends SearchMethod
         return CheckAll(Sentences, query,symbols, model); //Return **
     }
 
-    public boolean CheckAll(List<List<String>> Sentences, List<String> query, List<String> symbols,Model model)
+    public boolean CheckAll(List<List<String>> sentences, List<String> query, List<String> symbols,Model startModel)
     {
-        String P;
+        String P;// Used to get the first Symbol from the list
         if ((symbols.size() <= 0)) //if there are still symbols in the list
         {
-            if (PLTrue(Sentences, model)) //If the model satisfies the knowledgebase
+            if (PLTrue(sentences, startModel)) //If the model satisfies the knowledge base
             {
-                if (PLTrue(model, query))
+                if (PLTrue(startModel, query)) //If the model satisfies the query
                 {
-                    count++; //TEMP
-                   // System.out.println(count);//TEMP
+                    count++; //Add one to the count
                 }
-                return PLTrue(model, query); //If the model satisfies the query
+                return PLTrue(startModel, query); //If the model satisfies the query
             }
-            else
+            else //If the model does not satisy, return true always
             {
                 return true;
             }
         }
         else
         {
-            do
-            {
-                P = symbols.get(0);         //get the first symbol in the list
-                List<String> Rest = new ArrayList<>(symbols); //The rest of the symbols
-                Rest.remove(0);    //and remove it from the list, so that it is the same but one symbol has been removed
-                Model tempModel = model.Copy();
-                return (CheckAll(Sentences, query, Rest, model.add(P,true)) && CheckAll(Sentences, query, Rest, tempModel.add(P,false))); //Recursively return CheckALL with the new model and symbols to create the truth table
-            }while(true);
+            P = symbols.get(0);         //get the first symbol in the list
+            List<String> Rest = new ArrayList<>(symbols); //The rest of the symbols
+            Rest.remove(0);    //and remove it from the list, so that it is the same but one symbol has been removed
+            Model tempModel = startModel.Copy(); //Deep copy of the startModel to tempModel
+            return (CheckAll(sentences, query, Rest, startModel.add(P,true)) && CheckAll(sentences, query, Rest, tempModel.add(P,false))); //Recursively return CheckALL with the new model and symbols to create the truth table
         }
-        //if symbols is empty then
-        //if PL-TRUE(KB,model) then return PL-TRUE(query, model)
-        //else return true when KB is false, always return true
-        //else do
-        // P = First(Symbols)
-        // rest = Rest(Symbols)
-        // return (CheckAll(Kb, q, model or {P = true}) and CheckAll(Kb, q, model or {P = false} )
-        //return true;
     }
 
     public int getCount()
     {
         return count;
-    }
+    } //Return the count variable
 
     private boolean PLTrue(Model model, List<String> query) //Evaluate the model against the query
     {
         Equation left = new Equation(); //If there is only a query, we only need one side
-        left.Clear();
+        left.Clear(); //Clear out anything within left
         for (String x:query)//For all strings in the query
         {
-            //if (x != "=>")
-            //{
-                left.addArgument(x); //Add the arguments to the side
-            //}
+            left.addArgument(x); //Add the arguments to the side
         }
         left.setValue(EvaluateSide(left, model)); //Set the value based on the model
-
         return left.getValue(); //Return this value
     }
 
@@ -133,8 +113,6 @@ public class TruthTable extends SearchMethod
                         leftToRight = true; //Left side has been completed, move to right side now
                     }
                 }
-                //System.out.println("left: " + left.getArguments());
-                //System.out.println("right: " + right.getArguments());
                 left.setValue(EvaluateSide(left, model));//Does the model hold true in this sentence?
                 right.setValue(EvaluateSide(right, model)); //Does the model hold true in this sentence?
                 if (left.getValue() && !right.getValue()) //If the left side is true and the right side is false then the model does not satisfy the knowledge base
@@ -148,7 +126,6 @@ public class TruthTable extends SearchMethod
                 {
                     left.addArgument(x); //Add this string
                 }
-               // System.out.println("Single: " + left.getArguments());
                 left.setValue(EvaluateSide(left, model)); //Evaluate the model to the sentence
                 if (!left.getValue())
                 {
@@ -160,7 +137,6 @@ public class TruthTable extends SearchMethod
         //Only need to find if left is true and right is false, if that return false, else return true
         return true;
     }
-
 
     private boolean EvaluateSide(Equation tempSide, Model tempModel) //Evaluate the side against the model
     {
@@ -176,20 +152,19 @@ public class TruthTable extends SearchMethod
                 {
                     if (!And(tempSide.getArguments().get(i-1), tempSide.getArguments().get(i+1), tempModel)) //Then the left and right of that symbol need to be evaluated, return if false
                     {
-                        return false;
+                        return false; //If it fails, return false
                     }
                 }
                 else if(tempSide.getArguments().get(i).equals("|")) //If the symbol is a "|"
                 {
-                    if (!Or(tempSide.getArguments().get(i-1), tempSide.getArguments().get(i+1), tempModel))
+                    if (!Or(tempSide.getArguments().get(i-1), tempSide.getArguments().get(i+1), tempModel))//Get the symbols on either side of this symbol
                     {
-                        return false;
+                        return false;//If it fails, return false
                     }
                 }
             }
-            return true;
+            return true;//If nothing fails, return true
         }
-
     }
 
     private boolean Single(String left, Model tempModel)//If there is only one string in the sentence
@@ -202,7 +177,7 @@ public class TruthTable extends SearchMethod
                 leftBool = s.getValue();
             }
         }
-        return leftBool;
+        return leftBool; //Return the value of this symbol
     }
 
     private boolean Or(String left,String right, Model tempModel) //If you are "Or"ing values
@@ -241,12 +216,22 @@ public class TruthTable extends SearchMethod
         return (leftBool && rightBool); //Return if they are both true
     }
 
-    //Gets a list of the symbols from the Knowledgebase and the query, avoids duplicates/
+    //Gets a list of the symbols from the Knowledge base and the query, avoids duplicates/
     public List<String> getSymbols(List<String> KB, List<String> Q)
     {
-        List<String> result = new ArrayList<>();
+        List<String> result = new ArrayList<>(); //Result variable to store a list of the symbols
 
-        for (String s: KB)
+        for (String s: KB) //For every string in the knowledge base
+        {
+            if (!s.equals("=>")&& !s.equals("&") && !s.equals(";"))//If this string is not one of these symbols
+            {
+                if (!result.contains(s)) //If the result does not already contain the symbol
+                {
+                    result.add(s); //Add the symbol
+                }
+            }
+        }
+        for (String s: Q) //For every string in the query
         {
             if (!s.equals("=>")&& !s.equals("&") && !s.equals(";"))
             {
@@ -256,20 +241,8 @@ public class TruthTable extends SearchMethod
                 }
             }
         }
-        for (String s: Q)
-        {
-            if (!s.equals("=>")&& !s.equals("&") && !s.equals(";"))
-            {
-                if (!result.contains(s))
-                {
-                    result.add(s);
-                }
-            }
-        }
-        //String[] temp = result.toArray(new String[result.size()]);
         return result;
     }
-
 
     //Returns a list of the sentences in the knowledge base
     private List<List<String>> GetSentences(List<String> knowledgeBase)
@@ -277,30 +250,18 @@ public class TruthTable extends SearchMethod
         List<List<String>> Sentences = new ArrayList<>();
         List<String> sentence = new ArrayList<>();
 
-        for (String s : knowledgeBase)
+        for (String s : knowledgeBase) //For every String in the knowledge base
         {
-            if (s.equals(";"))
+            if (s.equals(";")) //If the string equal ";" it mean the end of a sentence has been reached
             {
-
-                Sentences.add(sentence);
-                sentence = new ArrayList<>();
+                Sentences.add(sentence); //Add this sentence to the Sentences list
+                sentence = new ArrayList<>(); //Reset the sentence variable
             }
             else
             {
-                sentence.add(s);
+                sentence.add(s); //Add a string to the sentence
             }
         }
-
-//        System.out.println("");
-//        System.out.println("TELL:");
-//        for(List<String> s: Sentences)
-//        {
-//            for (String t: s)
-//            {
-//                System.out.print(t);
-//            }
-//            System.out.println();
-//        }
-        return Sentences;
+        return Sentences; //Return a list of all of the sentences (List of Lists of Strings)
     }
 }

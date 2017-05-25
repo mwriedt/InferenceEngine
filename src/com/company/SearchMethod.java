@@ -16,14 +16,9 @@ public abstract class SearchMethod
     private int count;
 
 
-    public SearchMethod()
-    {
-    }
+    public SearchMethod() {}
 
-    public void SetValues(ProblemSet tempProblemSet)
-    {
-
-    }
+    public void SetValues(ProblemSet tempProblemSet) {}
 
     public int getCount()
     {

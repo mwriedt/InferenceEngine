@@ -1,71 +1,34 @@
 package com.company;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Mitchell on 9/05/2017.
  */
-public class Model
+
+public class Model //A model is a model of symbols that contain a True/False value along with its symbol
 {
-    private List<Symbol> model = new ArrayList<>(); //Container for the model, contains symbols which has true/false values
+    private List<Symbol> modelList = new ArrayList<>(); //Container for the model, contains symbols which has true/false values
 
-    public Model()
+    public Model add(String id, Boolean value)//We call this method if we want to add a symbol to a model along with its True/False value
     {
-
-    }
-
-    public Model add(String id, Boolean value)
-    {
-      //  if (FindValue(id))
-        //{
-            model.add(new Symbol(id, value)); //Add a new symbol to the model
-        //}
-           // System.out.println("ADDING");
-        return this;
+        modelList.add(new Symbol(id, value)); //Add a new symbol to the model
+        return this;//Return this model
     }
 
     public List<Symbol> GetModel()
     {
-        return model;
+        return modelList; //Get the model from this object
     }
 
-    public Model Copy()
+    public Model Copy()//A deep copy for a model
     {
         Model temp = new Model();
-        for(Symbol s:model)
+        for(Symbol s:modelList) //Copy every symbol from the current model to a temp model
         {
             temp.add(s.getId(),s.getValue());
         }
-        return temp;
+        return temp; //Return the temp model
     }
-
-    private boolean FindValue(String id)
-    {
-        for(Symbol s: model)
-        {
-            if (s.getId() == id)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    public boolean get(int i)
-    {
-        return model.get(i).getValue();
-    }
-
-    public void Empty() //Testing, maybe needed for the CheckALL function
-    {
-        for(int i = 0; i < model.size(); i++)
-        {
-            model.remove(i);
-        }
-    }
-
 }

@@ -39,11 +39,6 @@ public class Parser
             query.add(readAsk);
 
             result = new ProblemSet(symbols, query);
-            System.out.println("Tell: " + readTell);
-            System.out.println("Ask: " + readAsk);
-
-            //create the TT object...
-           // result = new TruthTable();
 
             problem.close();
             return result;
@@ -75,11 +70,8 @@ public class Parser
         String[] symbols = noSpaces.split("(?<==>)|(?==>)|(?<=;)|(?=;)|(?<=&)|(?=&)");
         List<String> symbolList = Arrays.asList(symbols);
 
-        System.out.println("parse: " + Arrays.toString(symbols));
         return symbolList;
         //put into table
-
-        //return something. change void
     }
 
 
