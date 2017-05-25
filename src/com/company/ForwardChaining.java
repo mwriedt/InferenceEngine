@@ -7,10 +7,10 @@ import java.util.*;
 
 public class ForwardChaining extends SearchMethod
 {
-    private List<String> clauses = new ArrayList<>();          // all clauses that are not one symbol
-    private List<String> agenda = new ArrayList<>();           // includes single symbols. All initially true in KB but not yet processed
-    private List<String> areTrue = new ArrayList<>();          // all true. symbols removed from agenda
-    private ArrayList<Integer> count = new ArrayList<>();      // stores how many premises of each clause are unknown
+    private List<String> clauses;          // all clauses that are not one symbol
+    private List<String> agenda;           // includes single symbols. All initially true in KB but not yet processed
+    private List<String> areTrue;          // all true. symbols removed from agenda
+    private List<Integer> count;           // stores how many premises of each clause are unknown
 
     public ForwardChaining()
     {
@@ -24,6 +24,11 @@ public class ForwardChaining extends SearchMethod
     {
         knowledgeBase = tempProblemSet.KnowledgeBase;       // sets knowledge base
         query = tempProblemSet.Query;                       // sets query
+
+        clauses = new ArrayList<>();
+        agenda = new ArrayList<>();
+        areTrue = new ArrayList<>();
+        count = new ArrayList<>();
 
         String str = knowledgeBase.toString();              // knowledge base to string
         str = str.substring(1, str.length()-1);             // store string in between [ ]
@@ -75,7 +80,7 @@ public class ForwardChaining extends SearchMethod
 
         while(!agenda.isEmpty())                            // while there are symbols in agenda
         {
-            p = agenda.remove(0);                           // remove first item and store in p
+            p = agenda.remove(0);                      // remove first item and store in p
             areTrue.add(p);                                 // add p to list of symbols known to be true
 
             if(p.equals(query.get(0)))                      // if p is the query
